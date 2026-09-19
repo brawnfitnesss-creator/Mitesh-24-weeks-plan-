@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<title>MITESH — 24-Week Elite Program</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#090910;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#EEEEF5;height:100vh;height:100dvh;overflow:hidden}
+#app{height:100vh;height:100dvh;display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative;overflow:hidden}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:72px}
+input,textarea,button{font-family:inherit;outline:none}
+::-webkit-scrollbar{display:none}
+input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.4}
+.chip{border-radius:20px;padding:3px 9px;font-size:10px;font-weight:600;display:inline-block}
+.nav{display:flex;background:#111119;border-top:1px solid #2E2E44;flex-shrink:0}
+.nav-btn{flex:1;padding:11px 0 14px;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.toast{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:#22C55E;color:#fff;padding:9px 18px;border-radius:20px;font-size:12px;font-weight:700;z-index:100;white-space:nowrap;pointer-events:none}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px}
+.modal{background:#181823;border-radius:14px;padding:22px;max-width:320px;width:100%}
+.prog-bar-wrap{height:4px;background:#2E2E44;border-radius:2px;overflow:hidden}
+.prog-bar-fill{height:100%;border-radius:2px;transition:width .4s}
+.sess-card{border-radius:12px;padding:12px;cursor:pointer;display:flex;align-items:center;width:100%;margin-bottom:10px;gap:11px;text-align:left;border-width:1.5px;border-style:solid}
+.block-hdr{display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:10px 10px 0 0;border-bottom:none}
+.block-body{border-top:none;border-radius:0 0 10px 10px;overflow:hidden}
+.ex-row{padding:10px 13px;cursor:pointer;display:flex;align-items:flex-start;gap:10px}
+.log-panel{padding:10px 12px;border-top:1px solid #2E2E44}
+.set-grid{display:grid;grid-template-columns:34px 1fr 1fr 28px;gap:5px;margin-bottom:5px;align-items:center}
+.inp{background:#1F2030;border:1px solid #2E2E44;border-radius:6px;padding:5px 6px;color:#EEEEF5;font-size:11px;text-align:center;width:100%}
+.log-row{display:flex;gap:7px;align-items:center;margin-bottom:7px}
+.bubble{border-radius:50%;border:none;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s}
+.wk-dot{width:7px;height:7px;border-radius:50%}
+.stat-card{background:#181823;border-radius:10px;padding:9px 6px;text-align:center}
+.sec-hdr{font-size:10px;font-weight:800;color:#6B6B88;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.phase-banner{padding:12px 15px;border-radius:10px;margin-bottom:12px;border-left-width:4px;border-left-style:solid}
+</style>
+</head>
+<body>
+<div id="app"><div style="height:100%;display:flex;align-items:center;justify-content:center;color:#6B6B88;font-size:13px">Loading MITESH 24-Week Program…</div></div>
+<script>
+window.onerror=function(m,s,l,c,e){
+  document.getElementById('app').innerHTML=
+    '<div style="color:#FF6B35;padding:20px;font-size:12px;line-height:2">'+
+    '<b>Error:</b> '+m+'<br>Line '+l;
+  return true;
+};
+const C={bg:"#090910",surf:"#111119",card:"#181823",raise:"#1F2030",
+  p1:"#FF6B35",p2:"#4F8EF7",p3:"#0FEBA0",p4:"#F59E0B",p5:"#A855F7",p6:"#FF3D3D",
+  wod:"#FF3D3D",mob:"#A855F7",core:"#EC4899",
+  text:"#EEEEF5",muted:"#6B6B88",faint:"#2E2E44",
+  ok:"#22C55E",warn:"#F59E0B",danger:"#EF4444"};
+
+const PC={
+  1:{c:C.p1,name:"REBOOT",sub:"Foundation + Bodyweight Basics",wks:"Wk 1–4",bg:"#1A0D06"},
+  2:{c:C.p2,name:"SKILL",sub:"Gymnastics + Strength Combos",wks:"Wk 5–8",bg:"#06101A"},
+  3:{c:C.p3,name:"VOLUME",sub:"High Volume CrossFit Style",wks:"Wk 9–12",bg:"#06180E"},
+  4:{c:C.p4,name:"POWER",sub:"Explosive + Bodyweight Mastery",wks:"Wk 13–16",bg:"#1A1006"},
+  5:{c:C.p5,name:"PEAK",sub:"Max Strength + Advanced Skills",wks:"Wk 17–20",bg:"#110618"},
+  6:{c:C.p6,name:"ELITE",sub:"Performance Testing + Legacy",wks:"Wk 21–24",bg:"#1A0606"},
+};
+
+const DE={A:"💪",B:"🔥",C:"⚡"};
+const phaseOf=w=>w<=4?1:w<=8?2:w<=12?3:w<=16?4:w<=20?5:6;
+const sk=(w,d)=>`w${w}-${d}`;
+const today=()=>new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+
+const MOB=[
+  {n:"Neck Rolls (slow)",r:"5 each way",c:"Decompress cervical spine — never rush this"},
+  {n:"Chin Tucks",r:"12 reps",c:"Pull chin straight back; hold 2 sec — posture reset"},
+  {n:"Cat-Cow + Thread the Needle",r:"8+5/side",c:"Cat-cow first; thread at end of each cow"},
+  {n:"90/90 Hip Sit + Lean",r:"30 s/side",c:"Both sit bones down; lean fwd for depth"},
+  {n:"Hip Circles (standing)",r:"10 each way",c:"Slow and big; oil the joint capsule"},
+  {n:"World's Greatest Stretch",r:"5/side",c:"Hip flexor → thoracic rotation → hamstring"},
+  {n:"Glute Bridge + March",r:"10 bridges + 5 marches",c:"Activate glutes; reduce hip flexor dominance"},
+];
+
+const PROG={
+/* ════════════════════════════════════════════════════════════════
+   PHASE 1 — REBOOT (Wk 1–4)
+   Theme: Re-establish movement, learn bodyweight skills,
+          rebuild base. Fun + fresh patterns.
+════════════════════════════════════════════════════════════════ */
+p1A:{title:"PUSH + BODYWEIGHT INTRO",sub:"Shoulder wake-up + push skill building",wod:"AMRAP 10",tag:"🏗️ BUILD",
+  warmup:"5 min cross trainer · arm circles · 10 wall slides · inchworm × 5",
+  style:"Every set is a skill opportunity — move with intention, not just reps",
+  blocks:[
+    {nm:"SKILL OPENER",icon:"🤸",col:C.mob,ex:[
+      {n:"Wall Walk",s:3,r:"3 reps",c:"Walk feet up wall; hold 3 sec at top; walk down controlled"},
+      {n:"Pike Push-up",s:3,r:"8",c:"Hips high; head tracks between hands; feel the deltoid load"},
+      {n:"Pseudo Planche Lean",s:3,r:"20 s",c:"On push-up position; lean forward until shoulders over wrists"},
+    ]},
+    {nm:"STRENGTH BLOCK",icon:"💪",col:C.p1,ex:[
+      {n:"DB Lateral Raise",s:4,r:"15",c:"Lead elbows; pinky slightly higher; no swinging"},
+      {n:"DB Arnold Press",s:4,r:"12",c:"Rotate wrist on the way up; full lockout; squeeze at top"},
+      {n:"Pec Deck Fly",s:3,r:"15",c:"Arms slightly bent; feel chest stretch at the bottom"},
+      {n:"DB Front Raise (Alternating)",s:3,r:"10/side",c:"Controlled; pinky up; no body sway"},
+    ]},
+    {nm:"WOD — AMRAP 10 MIN",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Burpees",s:1,r:"5/round",c:"Chest to floor; full jump + clap overhead — quality reps"},
+      {n:"DB Thrusters",s:1,r:"10/round",c:"Squat deep; drive through heels; full press overhead"},
+      {n:"Bear Crawl (forward + back)",s:1,r:"10 m each/round",c:"Knees 2 inches off floor; opposite arm-leg move"},
+    ]},
+    {nm:"CORE",icon:"🎯",col:C.core,ex:[
+      {n:"Hollow Body Hold",s:3,r:"20 s",c:"Arms by ears; low back MUST touch floor — belly in"},
+      {n:"Dead Bug",s:3,r:"8/side",c:"Opposite arm + leg extend; don't let low back arch"},
+    ]},
+  ],
+  cool:["Thread the needle: 30 s × 2/side","Hip flexor kneeling stretch: 40 s × 2/side","Neck side stretch: 20 s × 2/side","Child's pose: 45 s"],
+},
+p1B:{title:"PULL + HINGE + ANIMAL FLOW",sub:"Back & hamstring strength + fun movement",wod:"5 RFT",tag:"🐻 MOVE",
+  warmup:"5 min treadmill walk · hip circles · crab walk 10 m × 2",
+  style:"Animal flow movements replace traditional cardio — stay low, stay connected",
+  blocks:[
+    {nm:"ANIMAL FLOW WARM-UP",icon:"🐻",col:C.p4,ex:[
+      {n:"Crab Walk (forward + back)",s:2,r:"15 m each",c:"Hips high; don't sit; push through palms and heels"},
+      {n:"Bear Crawl Lateral",s:2,r:"10 m each way",c:"Side to side; stay parallel; quiet feet"},
+      {n:"Scorpion Reach",s:2,r:"8/side",c:"Face down; rotate hip up; reach foot to opposite hand"},
+    ]},
+    {nm:"STRENGTH BLOCK",icon:"💪",col:C.p1,ex:[
+      {n:"Lat Pulldown — Wide Grip",s:4,r:"12",c:"Scapulae down first; pull elbows to hips; hold 1 sec"},
+      {n:"Seated Row — Neutral Grip",s:4,r:"12",c:"Chest tall; retract fully; 2 sec hold at peak"},
+      {n:"DB Romanian Deadlift",s:4,r:"12",c:"Push hips BACK not down; feel hamstring stretch at bottom"},
+      {n:"Reverse Pec Fly",s:3,r:"15",c:"Slight forward lean; thumbs point up; rear delt squeeze"},
+      {n:"DB Hammer Curl",s:3,r:"12",c:"Wrists neutral; squeeze bicep peak; controlled descent"},
+    ]},
+    {nm:"WOD — 5 ROUNDS FOR TIME",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Inchworm Push-up",s:1,r:"6/round",c:"Walk hands out to push-up; do 1 push-up; walk back"},
+      {n:"DB Sumo Deadlift High Pull",s:1,r:"10/round",c:"Wide stance; explosive drive; lead elbows to ceiling"},
+      {n:"Crab Reach",s:1,r:"8/side/round",c:"From crab position; extend one arm overhead + rotate"},
+    ]},
+    {nm:"HIP MOBILITY",icon:"🦵",col:C.mob,ex:[
+      {n:"Pigeon Pose",s:2,r:"45 s/side",c:"Square hips; fold forward; breathe into the stretch"},
+      {n:"Glute Bridge (hold at top)",s:3,r:"12 + 3s hold",c:"Drive hips up; squeeze glutes hard; hold 3 sec"},
+    ]},
+  ],
+  cool:["Pigeon pose: 60 s × 2/side","Supine figure-4: 40 s × 2/side","Neck rotation sequence: 20 s each direction","Seated hamstring stretch: 30 s × 2/side"],
+},
+p1C:{title:"FULL BODY + PLAY SESSION",sub:"Fun conditioning + lower body + core games",wod:"CHIPPER",tag:"🎮 PLAY",
+  warmup:"5 min cross trainer · leg swings × 15 each · 10 jump squats",
+  style:"This day is about enjoying movement. Go hard but smile — this should be fun",
+  blocks:[
+    {nm:"LOWER STRENGTH",icon:"💪",col:C.p1,ex:[
+      {n:"Seated Leg Press",s:4,r:"15",c:"Feet hip-width; explosive push; controlled return — no bounce"},
+      {n:"Walking Lunges (DB)",s:3,r:"12/side",c:"Big step; knee just above floor; upright torso"},
+      {n:"Leg Extension",s:3,r:"15",c:"3 sec down; squeeze quad hard at top; don't lock out"},
+      {n:"Standing Calf Raise",s:4,r:"20",c:"Full ROM; pause at bottom; explode up; 1 sec hold top"},
+    ]},
+    {nm:"BODYWEIGHT SKILL",icon:"🤸",col:C.mob,ex:[
+      {n:"Box Jump (bench)",s:3,r:"8",c:"Land softly two feet; full extension at top; step down"},
+      {n:"Broad Jump",s:3,r:"5",c:"Swing arms; jump for distance; soft landing; note distance"},
+      {n:"Lateral Bound",s:3,r:"8/side",c:"Jump side-to-side; land on one foot; control the landing"},
+    ]},
+    {nm:"WOD — CHIPPER (DO NOT SPLIT)",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Jumping Jacks",s:1,r:"50",c:"Warm the blood; full range; don't rush these"},
+      {n:"Air Squats",s:1,r:"30",c:"Below parallel every rep; chest up; heels down"},
+      {n:"Push-ups",s:1,r:"20",c:"Full ROM; chest to floor; lock out at top"},
+      {n:"V-ups",s:1,r:"15",c:"Reach hands to feet simultaneously; controlled"},
+      {n:"Burpees",s:1,r:"10",c:"Finish strong — this is the last movement"},
+    ]},
+    {nm:"CORE PLAY",icon:"🎯",col:C.core,ex:[
+      {n:"Plank to Downward Dog",s:3,r:"10",c:"Plank → push back to down dog → hold 2 sec → return"},
+      {n:"Russian Twist (DB)",s:3,r:"15/side",c:"Feet elevated; full rotation; touch floor each side"},
+    ]},
+  ],
+  cool:["Couch stretch: 60 s × 2/side","Hip 90/90 sit: 40 s/side","Cat-cow: 10 reps slow","Child's pose + lateral reach: 30 s each side"],
+},
+
+/* ════════════════════════════════════════════════════════════════
+   PHASE 2 — SKILL (Wk 5–8)
+   Theme: Gymnastics skills + strength combos.
+          Handstand work, pull progressions, explosive lower.
+════════════════════════════════════════════════════════════════ */
+p2A:{title:"HANDSTAND SKILL + PRESS",sub:"Overhead gymnastics + shoulder hypertrophy",wod:"EMOM 12",tag:"🙃 INVERT",
+  warmup:"5 min cross trainer · shoulder pass-throughs · wall slide × 12 · cat-cow × 10",
+  style:"Handstand work before fatigue sets in — skill first, always",
+  blocks:[
+    {nm:"GYMNASTICS SKILL",icon:"🤸",col:C.mob,ex:[
+      {n:"Wall Walk (slow)",s:4,r:"2 reps",c:"Take 5 sec each direction; feel shoulder load; full extension"},
+      {n:"Handstand Hold (wall)",s:4,r:"20 s",c:"Belly to wall; straight line; press floor away with hands"},
+      {n:"Pike Push-up — Elevated Feet",s:3,r:"8",c:"Feet on bench; full range; nose to floor and back"},
+    ]},
+    {nm:"SHOULDER STRENGTH",icon:"💪",col:C.p2,ex:[
+      {n:"DB Lateral Raise (Giant Set)",s:5,r:"15+12+10",c:"3 mini-sets no rest: front raise → lateral → bent-over"},
+      {n:"DB Overhead Press (Seated)",s:4,r:"10",c:"Strict; no lumbar flare; full lockout; 3 sec descent"},
+      {n:"DB Upright Row",s:4,r:"12",c:"Elbows lead; wrists stay low; squeeze traps at top"},
+      {n:"Barbell Bench Press",s:4,r:"10",c:"70% effort; controlled; use 20kg bar + plates or DBs"},
+    ]},
+    {nm:"WOD — EMOM 12 MIN",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"MIN 1: Push-ups (max reps)",s:1,r:"Max in 40 s",c:"Strict form; track your number; try to beat each round"},
+      {n:"MIN 2: DB Thrusters",s:1,r:"10",c:"Heavy; squat to full press; no break; breathe at top"},
+      {n:"MIN 3: Hollow Rock",s:1,r:"15",c:"Lower back on mat; slow controlled rocks; breathe"},
+      {n:"Repeat × 4 rounds",s:1,r:"= 12 min",c:"Rest is the remaining seconds in each minute"},
+    ]},
+    {nm:"CORE STABILITY",icon:"🎯",col:C.core,ex:[
+      {n:"Plank Shoulder Tap",s:3,r:"12/side",c:"Don't rotate; tap opposite shoulder; hips level"},
+      {n:"Ab Wheel Rollout",s:3,r:"8",c:"From knees; hips in line; go slow; full extension"},
+    ]},
+  ],
+  cool:["Overhead shoulder stretch: 30 s × 2/side","Wrist circles + wrist flexor stretch: 30 s","Neck all planes: 20 s each","Hip flexor stretch kneeling: 45 s × 2/side"],
+},
+p2B:{title:"PULLING STRENGTH + BAR SKILLS",sub:"Pull progressions + deadlift + ring row skills",wod:"TABATA",tag:"🏋️ PULL",
+  warmup:"5 min treadmill · hanging dead hang 30 s × 3 · hip circles × 10",
+  style:"Every pulling movement preps you for eventual pull-ups and muscle-ups",
+  blocks:[
+    {nm:"BAR SKILL PROGRESSION",icon:"🤸",col:C.mob,ex:[
+      {n:"Dead Hang",s:3,r:"30 s",c:"Full grip; relax shoulders first; then pack them down"},
+      {n:"Scapular Pull-up",s:3,r:"8",c:"Hanging; depress scapulae only — no elbow bend; hold 2 sec"},
+      {n:"Australian Pull-up (Inverted Row)",s:3,r:"10",c:"Feet up on bench; body straight; pull chest to bar"},
+    ]},
+    {nm:"STRENGTH BLOCK",icon:"💪",col:C.p2,ex:[
+      {n:"Lat Pulldown — Close Neutral",s:4,r:"10",c:"Heavy; dead-hang start; explosive pull; hold at chest"},
+      {n:"Barbell Bent-Over Row",s:4,r:"10",c:"Hinge 45°; explosive pull; squeeze rhomboids; rigid spine"},
+      {n:"Seated Row — Wide Grip",s:4,r:"12",c:"Elbows flare out more; upper back emphasis"},
+      {n:"DB Single Arm Row",s:3,r:"12/side",c:"Chest supported on bench; full ROM; elbow to ceiling"},
+      {n:"Reverse Pec Fly (slow)",s:3,r:"15",c:"4 sec up; hold 1 sec; 4 sec down — rear delt burn"},
+    ]},
+    {nm:"WOD — TABATA (20s ON / 10s OFF)",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Mountain Climbers",s:1,r:"8 × 20 s",c:"Alternate with next — do 2 rounds of each"},
+      {n:"Inverted Row / Body Row",s:1,r:"8 × 20 s",c:"Max reps in 20 s; full ROM every rep"},
+      {n:"Jump Squats",s:1,r:"8 × 20 s",c:"Explode; land soft; immediate re-jump"},
+      {n:"DB Snatch (alt)",s:1,r:"8 × 20 s",c:"Hip drive; catch overhead; alt each rep"},
+    ]},
+    {nm:"BICEP + FOREARM",icon:"💥",col:C.core,ex:[
+      {n:"DB Curl — Slow Eccentric",s:4,r:"10",c:"2 sec up; 4 sec DOWN — the descent builds most size"},
+      {n:"Zottman Curl",s:3,r:"10",c:"Supinate up; pronate at top; hammer down — full arm hit"},
+    ]},
+  ],
+  cool:["Pigeon pose: 50 s × 2/side","Lat stretch (arm overhead): 30 s × 2/side","Neck lateral + rotation: 20 s each direction","Wrist flexor stretch: 20 s × 2"],
+},
+p2C:{title:"LOWER POWER + CONDITIONING",sub:"Explosive lower + gymnastics finisher",wod:"FOR TIME",tag:"💥 EXPLODE",
+  warmup:"5 min jog · 15 air squats · 10 jump squats · leg swings",
+  style:"Today is about power — every movement should feel explosive and athletic",
+  blocks:[
+    {nm:"EXPLOSIVE LOWER",icon:"💪",col:C.p2,ex:[
+      {n:"Barbell RDL",s:5,r:"8",c:"Add 5 kg from Phase 1; drive hips back; controlled descend"},
+      {n:"Leg Press (Explosive)",s:4,r:"10",c:"Push FAST; control the return; note weight this week"},
+      {n:"Bulgarian Split Squat (DB)",s:3,r:"10/side",c:"Back foot on bench; front knee over toe; chest up"},
+      {n:"Standing Leg Curl",s:4,r:"10",c:"Slow 4 sec return; squeeze hamstring hard at top"},
+    ]},
+    {nm:"PLYOMETRIC SKILL",icon:"🤸",col:C.mob,ex:[
+      {n:"Bench Jump-over (lateral)",s:3,r:"10/side",c:"Jump over bench; land soft; immediate bounce back"},
+      {n:"Broad Jump to Sprint",s:3,r:"3 jumps + 10 m",c:"3 broad jumps; immediately sprint 10 m; walk back"},
+      {n:"Pistol Squat Progression",s:3,r:"5/side",c:"Use wall/bench; work toward unassisted; go to depth"},
+    ]},
+    {nm:"WOD — FOR TIME (15 min cap)",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Treadmill Run",s:1,r:"400 m",c:"Set pace 8-10 km/h; controlled; this opens the WOD"},
+      {n:"Air Squats",s:1,r:"30",c:"Unbroken if possible; below parallel; speed"},
+      {n:"Push-ups",s:1,r:"20",c:"Chest to floor; lockout at top"},
+      {n:"DB Swings",s:1,r:"20",c:"Hip snap; arms passive; eye level height minimum"},
+      {n:"Treadmill Run",s:1,r:"400 m",c:"Same pace or faster — close the WOD strong"},
+    ]},
+    {nm:"CALF + ANKLE",icon:"🦵",col:C.core,ex:[
+      {n:"Standing Calf Raise (heavy)",s:4,r:"15",c:"Full ROM; pause at bottom; single leg if too easy"},
+      {n:"Ankle Circles + Calf Stretch",s:2,r:"30 s each",c:"Mobility work — prevent ankle stiffness"},
+    ]},
+  ],
+  cool:["Couch stretch: 60 s × 2/side","Calf stretch wall: 30 s × 2/side","Pigeon pose: 45 s × 2/side","Neck + thoracic extension: 30 s"],
+},
+
+/* ════════════════════════════════════════════════════════════════
+   PHASE 3 — VOLUME (Wk 9–12)
+   Theme: High volume CrossFit style. Girl WODs.
+          Bodyweight complexes. Shoulder volume peak.
+════════════════════════════════════════════════════════════════ */
+p3A:{title:"SHOULDER VOLUME + PUSH COMPLEX",sub:"High-rep shoulder assault + push gymnastics",wod:"'CINDY' VARIATION",tag:"🔺 VOLUME",
+  warmup:"5 min cross trainer · shoulder CARs × 8 · wall walks × 3 · 10 pike push-ups",
+  style:"Volume day — moderate weight, high reps, short rest. Shoulders will be on fire.",
+  blocks:[
+    {nm:"GYMNASTICS COMPLEX",icon:"🤸",col:C.mob,ex:[
+      {n:"Handstand Hold (wall)",s:5,r:"25 s",c:"Build from Phase 2; belly to wall; press away hard"},
+      {n:"Pike Push-up → Regular Push-up",s:4,r:"5+5",c:"5 pike push-ups immediately into 5 regular — no rest"},
+      {n:"Archer Push-up",s:3,r:"6/side",c:"Wide push-up; shift to one side; tricep and pec overload"},
+    ]},
+    {nm:"SHOULDER HYPERTROPHY",icon:"💪",col:C.p3,ex:[
+      {n:"DB Lateral Raise",s:5,r:"20",c:"Light weight; high reps; cables burn is what we want here"},
+      {n:"DB Lateral Raise — 21s",s:3,r:"21 total",c:"7 bottom half; 7 top half; 7 full — no rest between"},
+      {n:"DB Arnold Press",s:4,r:"12",c:"Full rotation; complete lockout; 2 sec negative"},
+      {n:"Chest Press Machine (drop set)",s:3,r:"12+8+fail",c:"3 drops; no rest between; last set absolute failure"},
+    ]},
+    {nm:"WOD — 'CINDY' STYLE 20 MIN AMRAP",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Push-ups",s:1,r:"10/round",c:"Chest to deck; full lockout — pace yourself for 20 min"},
+      {n:"Air Squats",s:1,r:"15/round",c:"Below parallel; fast but controlled; breathe at top"},
+      {n:"Hollow Body Hold",s:1,r:"20 s/round",c:"Lower back flat; arms overhead; breathe shallow"},
+      {n:"Note total rounds completed",s:1,r:"TRACK",c:"Benchmark — you will retest this in Phase 6"},
+    ]},
+    {nm:"CORE VOLUME",icon:"🎯",col:C.core,ex:[
+      {n:"Hanging Knee Raise",s:4,r:"12",c:"Controlled; tuck tight; no swing; lower slow"},
+      {n:"Russian Twist (weighted)",s:3,r:"20/side",c:"Feet elevated; fast rotation; touch floor both sides"},
+    ]},
+  ],
+  cool:["Overhead shoulder stretch: 30 s × 2/side","Neck side + retraction: 20 s × 3/side","Hip flexor couch stretch: 50 s × 2/side","Child's pose: 60 s"],
+},
+p3B:{title:"BACK VOLUME + BODYWEIGHT COMPLEX",sub:"Pull-up progression + barbell rows + flow",wod:"COMPLEX",tag:"🦍 PULL",
+  warmup:"5 min treadmill · dead hang 3 × 30 s · scapular pull-ups × 8",
+  style:"Pull-up progression is the skill thread of this phase — we're building to the real thing",
+  blocks:[
+    {nm:"PULL-UP PROGRESSION",icon:"🤸",col:C.mob,ex:[
+      {n:"Band-Assisted Pull-up (or Inverted Row)",s:5,r:"5",c:"Full ROM; dead hang start; chin over bar; slow descend"},
+      {n:"Negative Pull-up",s:3,r:"4",c:"Jump to top; take 5-8 sec to lower; resist gravity"},
+      {n:"L-Hang",s:3,r:"15 s",c:"Dead hang; lift legs to 90°; maintain hollow body"},
+    ]},
+    {nm:"STRENGTH BLOCK",icon:"💪",col:C.p3,ex:[
+      {n:"Barbell Bent-Over Row (volume)",s:5,r:"10",c:"Moderate weight; explosive pull; 30 s rest only"},
+      {n:"Lat Pulldown (heavy + pause)",s:4,r:"8",c:"2 sec dead hang; explosive pull; 2 sec hold chest"},
+      {n:"Seated Row (wide + close alt)",s:4,r:"12",c:"Alternate grip each set — hit all angles of back"},
+      {n:"Face Pull (use row cable)",s:3,r:"15",c:"Pull to face; external rotation at end; rear delt + rotator"},
+    ]},
+    {nm:"WOD — BARBELL COMPLEX (6 reps each)",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Barbell Deadlift",s:1,r:"6",c:"Don't put bar down between movements — one bar one load"},
+      {n:"Barbell Hang Power Clean",s:1,r:"6",c:"Hip pop; elbows fast; catch in partial squat"},
+      {n:"Barbell Front Squat",s:1,r:"6",c:"Elbows high; chest up; deep squat; drive heels"},
+      {n:"Barbell Push Press",s:1,r:"6",c:"Dip and drive; lock overhead; control return"},
+      {n:"Rest 3 min — repeat × 4 rounds",s:1,r:"4 rounds",c:"Note weight used — increase if all reps complete"},
+    ]},
+    {nm:"BICEP POWER",icon:"💥",col:C.core,ex:[
+      {n:"DB Curl (heavy cheat last 2)",s:4,r:"10",c:"Strict 8; controlled cheat on last 2; slow negative"},
+      {n:"Incline DB Curl",s:3,r:"12",c:"Full stretch at bottom; long head emphasis; no swinging"},
+    ]},
+  ],
+  cool:["Pigeon pose: 60 s × 2/side","Lat stretch arm over: 30 s × 2/side","Hip 90/90 flow: 10 transitions","Neck all planes: 20 s each"],
+},
+p3C:{title:"GIRL WOD DAY",sub:"Classic CrossFit benchmarks + lower body",wod:"FRAN/HELEN",tag:"👸 CLASSIC",
+  warmup:"5 min jog · 15 air squats · 10 push-ups · inchworm × 5",
+  style:"Girl WODs are CrossFit classics — go hard, track time, retest in Phase 6",
+  blocks:[
+    {nm:"LOWER STRENGTH",icon:"💪",col:C.p3,ex:[
+      {n:"Barbell RDL (heavier)",s:5,r:"8",c:"Add 5 kg from Phase 2; control; note weight — track PRs"},
+      {n:"Leg Press — 21s",s:3,r:"21",c:"7 bottom half; 7 top half; 7 full — brutal leg pump"},
+      {n:"Walking Lunges (weighted)",s:3,r:"15/side",c:"Hold DBs; big steps; knee 1 inch from floor"},
+      {n:"Standing Leg Curl",s:3,r:"12",c:"Squeeze hard; 4 sec negative; no momentum"},
+    ]},
+    {nm:"WOD 1 — 'FRAN' STYLE (21-15-9)",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Thrusters (DB or barbell)",s:1,r:"21-15-9",c:"Squat to press in one motion; no break at top; GO"},
+      {n:"Push-ups",s:1,r:"21-15-9",c:"Chest to floor sub for pull-ups — note total time"},
+      {n:"Note total time",s:1,r:"BENCHMARK",c:"Write it down — retest in Week 22 (Phase 6)"},
+    ]},
+    {nm:"WOD 2 — 'HELEN' STYLE (3 rounds)",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Treadmill Run",s:1,r:"400 m × 3",c:"Set a consistent pace; don't go out too hot"},
+      {n:"DB Swings",s:1,r:"21 × 3",c:"Hip snap; eye level; arms are just a cable — it's all hips"},
+      {n:"Push-ups",s:1,r:"12 × 3",c:"Strict; chest to floor; sub for pull-ups"},
+      {n:"Note total time for 3 rounds",s:1,r:"BENCHMARK",c:"Track this — retest in Phase 6"},
+    ]},
+    {nm:"CALF + CORE",icon:"🎯",col:C.core,ex:[
+      {n:"Calf Raise (heavy)",s:4,r:"20",c:"Add weight from Phase 2; full ROM; pause at bottom"},
+      {n:"Hollow Rock",s:3,r:"20",c:"Lower back never leaves mat; rhythm is the goal"},
+    ]},
+  ],
+  cool:["Full hip sequence: 5 min","Neck complete series: 2 min","Supine figure-4: 50 s × 2/side","Savasana breathing: 1 min"],
+},
+
+/* ════════════════════════════════════════════════════════════════
+   PHASE 4 — POWER (Wk 13–16)
+   Theme: Explosive power + bodyweight mastery.
+          Olympic lifting. Pistol squats. Dragon flags.
+════════════════════════════════════════════════════════════════ */
+p4A:{title:"OLYMPIC LIFTING + POWER PUSH",sub:"Power clean intro + explosive pressing",wod:"AMRAP 15",tag:"⚡ OLY",
+  warmup:"5 min cross trainer · shoulder warm-up complex · 5 hang power clean (light bar)",
+  style:"Olympic lifts are the most athletic movements in the gym — focus on technique first",
+  blocks:[
+    {nm:"OLYMPIC SKILL",icon:"🏋️",col:C.p4,ex:[
+      {n:"Hang Power Clean (tech)",s:5,r:"5",c:"Hip pop first; shrug + elbows fast; catch in partial squat"},
+      {n:"Push Jerk (from rack or DB)",s:4,r:"6",c:"Dip; drive; press and dip under; lock overhead; stand"},
+      {n:"Barbell Complex: HPC + PJ",s:3,r:"3+3",c:"3 hang power cleans immediately into 3 push jerks — one bar"},
+    ]},
+    {nm:"SHOULDER STRENGTH",icon:"💪",col:C.p4,ex:[
+      {n:"Barbell Overhead Press (heavy)",s:5,r:"5",c:"Heaviest so far; glutes tight; drive from chest; full lock"},
+      {n:"DB Lateral Raise (heavy)",s:5,r:"12",c:"Slight forward lean; cheek last 2 reps; lateral delt peak"},
+      {n:"DB Push Press",s:4,r:"10",c:"Dip and drive; explosive; heavier than strict press allows"},
+      {n:"Handstand Push-up Neg.",s:3,r:"4",c:"Wall HS; lower head to floor in 5 sec; kick down; repeat"},
+    ]},
+    {nm:"WOD — AMRAP 15 MIN",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Hang Power Clean",s:1,r:"5/round",c:"Moderate weight; technique > speed in this WOD"},
+      {n:"Burpee Box Jump (bench)",s:1,r:"6/round",c:"Burpee; stand; jump onto bench; full extension at top"},
+      {n:"DB Push Press",s:1,r:"10/round",c:"Explosive; lock overhead; breathe at top each rep"},
+      {n:"Toes-to-Bar (or Knee Raise)",s:1,r:"8/round",c:"Kip or strict; toes to bar; no wild swinging"},
+    ]},
+    {nm:"CORE POWER",icon:"🎯",col:C.core,ex:[
+      {n:"Dragon Flag Progression",s:3,r:"5",c:"On bench; hold edge; lower body down in straight line; tucked ok"},
+      {n:"L-sit Hold",s:3,r:"20 s",c:"Between benches; legs straight; build from Phase 2 time"},
+    ]},
+  ],
+  cool:["Wrist + forearm stretch: 30 s × 2","Hip flexor lunge: 45 s × 2/side","Neck retraction + rotation: 20 s × 3","Thoracic extension over bench: 30 s"],
+},
+p4B:{title:"DEADLIFT STRENGTH + GYMNASTICS",sub:"Heavy pulling + bodyweight skill mastery",wod:"HERO FORMAT",tag:"🏆 HEAVY",
+  warmup:"5 min treadmill · hip hinge practice × 10 · dead hang 3 × 30 s",
+  style:"Today is your heaviest day — respect the bar, own the movement",
+  blocks:[
+    {nm:"GYMNASTIC SKILL",icon:"🤸",col:C.mob,ex:[
+      {n:"Band-Assisted Pull-up",s:5,r:"6",c:"Lighter band than Phase 3; more of YOUR pull; full ROM"},
+      {n:"Muscle-up Transition Drill",s:3,r:"5",c:"Jump to transition; work the catch position above bar"},
+      {n:"Ring Row (feet elevated)",s:3,r:"10",c:"Body parallel to floor; pull chest to rings; hold 2 sec"},
+    ]},
+    {nm:"STRENGTH BLOCK",icon:"💪",col:C.p4,ex:[
+      {n:"Barbell RDL (PR week)",s:5,r:"5",c:"Heaviest RDL of program; note weight; perfect hinge"},
+      {n:"Lat Pulldown (heavy)",s:4,r:"6",c:"Explosive pull; 3 sec hold at chest; 4 sec descend"},
+      {n:"DB Turkish Get-up",s:3,r:"3/side",c:"Eye on DB throughout; each phase slow and deliberate"},
+      {n:"Barbell Bent-Over Row (heavy)",s:4,r:"6",c:"Explosive pull; rigid spine; note weight this week"},
+    ]},
+    {nm:"WOD — HERO STYLE (3 RFT)",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Barbell Deadlift",s:1,r:"10/round",c:"Moderate; touch and go; maintain flat back every rep"},
+      {n:"Push-ups",s:1,r:"15/round",c:"Strict; chest to floor; no worming; elbows 45°"},
+      {n:"Box Jump (bench)",s:1,r:"10/round",c:"Full hip extension at top; step down; reset between"},
+      {n:"Treadmill Run",s:1,r:"200 m/round",c:"Controlled pace; note total time"},
+    ]},
+    {nm:"PISTOL SQUAT MASTERY",icon:"🦵",col:C.core,ex:[
+      {n:"Pistol Squat (wall assist)",s:3,r:"6/side",c:"Hold wall for balance; reach arm out; full depth"},
+      {n:"Pistol Squat (unassisted attempt)",s:2,r:"3/side",c:"Try it free; use a plate under heel if needed; note progress"},
+    ]},
+  ],
+  cool:["Pigeon pose: 60 s × 2/side","Hamstring stretch: 30 s × 2/side","Neck series all planes: 20 s each","Hollow body breathe: 30 s"],
+},
+p4C:{title:"POWER DAY + FLOW",sub:"Explosive athlete + animal flow combo",wod:"FOR TIME",tag:"🐆 FLOW",
+  warmup:"5 min jog · animal flow circuit 3 min · 10 broad jumps",
+  style:"Power + flow = athlete. Today blends strength with movement art.",
+  blocks:[
+    {nm:"ANIMAL FLOW COMPLEX",icon:"🐻",col:C.p4,ex:[
+      {n:"Beast to Crab Flow",s:3,r:"10 transitions",c:"Beast position → flip to crab → flip back; smooth not jerky"},
+      {n:"Scorpion Push-up",s:3,r:"8",c:"Push-up; at top kick one foot to opposite hand; alternate"},
+      {n:"Travelling Ape",s:2,r:"15 m",c:"Squat; hands fwd; jump feet to hands; repeat travelling"},
+    ]},
+    {nm:"LOWER POWER",icon:"💪",col:C.p4,ex:[
+      {n:"Jump Squat (weighted — DB)",s:4,r:"8",c:"Hold DBs at sides; explode; land soft; immediate next rep"},
+      {n:"Leg Press (pause + explode)",s:4,r:"10",c:"3 sec pause at bottom; explode as fast as possible up"},
+      {n:"Walking Lunge (explosive)",s:3,r:"12/side",c:"Drive off back foot explosively into next step — power"},
+      {n:"Calf Jump (on toes)",s:3,r:"20",c:"Stay on toes; fast rebounds; no heel touching floor"},
+    ]},
+    {nm:"WOD — FOR TIME (12 min cap)",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Broad Jumps",s:1,r:"10",c:"Maximum distance each rep; note total distance if you can"},
+      {n:"Burpee to Tuck Jump",s:1,r:"15",c:"Burpee; at top jump and tuck knees to chest"},
+      {n:"DB Swings",s:1,r:"20",c:"Hip snap; explosive; American (overhead) if strong enough"},
+      {n:"Bear Crawl",s:1,r:"20 m",c:"Stay low; alternate arm-leg; don't rush — quality"},
+      {n:"Air Squat",s:1,r:"30",c:"Below parallel; fast; this closes the WOD"},
+    ]},
+    {nm:"CORE + DRAGON FLAG",icon:"🎯",col:C.core,ex:[
+      {n:"Dragon Flag (progressive)",s:4,r:"5",c:"Add 1 rep/week from Phase 4 start; controlled lower"},
+      {n:"V-up",s:3,r:"15",c:"Reach hands to feet; controlled; breathing is key"},
+    ]},
+  ],
+  cool:["Full hip sequence: 5 min","Calf + ankle: 30 s × 2/side","Wrist mobility: 30 s circles each","Neck complete: all planes 20 s"],
+},
+
+/* ════════════════════════════════════════════════════════════════
+   PHASE 5 — PEAK (Wk 17–20)
+   Theme: Maximum strength + advanced bodyweight skills.
+          HSPU, muscle-up progression, heavy compound.
+════════════════════════════════════════════════════════════════ */
+p5A:{title:"HSPU + PEAK PRESSING STRENGTH",sub:"Handstand push-up work + heavy compound",wod:"AMRAP 20",tag:"🔝 PEAK",
+  warmup:"5 min cross trainer · shoulder complex · wall walks × 4 · pike push-ups × 10",
+  style:"This is your peak pressing week — handstand push-ups are now part of the program",
+  blocks:[
+    {nm:"HSPU PROGRESSION",icon:"🤸",col:C.mob,ex:[
+      {n:"Handstand Push-up (wall)",s:5,r:"3-5",c:"Head to mat; push back up; if not yet do 5 negatives"},
+      {n:"HS Hold → Walk (wall)",s:3,r:"30 s hold",c:"Progress: try lifting one hand; micro-steps sideways"},
+      {n:"Deficit Pike Push-up",s:3,r:"8",c:"Hands on plates/books; deeper ROM; harder than regular"},
+    ]},
+    {nm:"PEAK STRENGTH",icon:"💪",col:C.p5,ex:[
+      {n:"Barbell Bench Press (5RM)",s:5,r:"5",c:"Heaviest of entire program; full arch; explosive concentric"},
+      {n:"DB Lateral Raise (drop set)",s:5,r:"15→12→8→fail",c:"4 drops; zero rest; lateral delt complete destruction"},
+      {n:"Barbell Overhead Press (5RM)",s:4,r:"5",c:"Strict; heaviest press; note weight — track this PR"},
+      {n:"Weighted Push-up",s:3,r:"10",c:"Plate on back; strict form; heavier than bodyweight alone"},
+    ]},
+    {nm:"WOD — AMRAP 20 MIN",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"HSPU (or 5 negatives)",s:1,r:"5/round",c:"Peak skill movement; quality every rep"},
+      {n:"Hang Power Clean",s:1,r:"5/round",c:"Moderate; controlled; technique holds under fatigue"},
+      {n:"Air Squat",s:1,r:"15/round",c:"Below parallel; fast; breathe at top"},
+      {n:"Toes-to-Bar",s:1,r:"8/round",c:"Kip or strict; toes to bar; control the descent"},
+      {n:"Double Under (or 50 singles)",s:1,r:"30/round",c:"Jump rope if available; or do 50 jumping jacks"},
+      {n:"Note total rounds",s:1,r:"TRACK",c:"Benchmark — this is a key performance indicator"},
+    ]},
+    {nm:"SHOULDER ARMOUR",icon:"🎯",col:C.core,ex:[
+      {n:"Band External Rotation",s:3,r:"20/side",c:"Elbow pinned to side; rotate out; build rotator cuff"},
+      {n:"Farmer Carry (heavy)",s:4,r:"40 m",c:"Shoulders packed; hips level; grip strength + scapula"},
+    ]},
+  ],
+  cool:["Overhead + tricep stretch: 30 s × 2/side","Neck all planes extended holds: 25 s each","Hip flexor couch: 60 s × 2/side","Thoracic extension: 45 s"],
+},
+p5B:{title:"MUSCLE-UP PROGRESSION + MAX PULL",sub:"Closest to muscle-up + heaviest pull day",wod:"BENCHMARK 21-15-9",tag:"🦅 SKILL",
+  warmup:"5 min treadmill · dead hang × 3 × 30 s · scapular pull-ups × 10",
+  style:"Muscle-up day — the king of upper body skills. We work the transition today.",
+  blocks:[
+    {nm:"MUSCLE-UP SKILL",icon:"🤸",col:C.mob,ex:[
+      {n:"Chest-to-Bar Pull-up (or BAS)",s:4,r:"5",c:"Pull until chest touches bar; this IS the muscle-up pull"},
+      {n:"Dip (on bench/parallel bars)",s:4,r:"8",c:"Full ROM; chest upright; tricep focused; this is MU press"},
+      {n:"Muscle-up Transition (box)",s:3,r:"5",c:"Box under bar; practice the transition catch; groove pattern"},
+    ]},
+    {nm:"MAX PULL STRENGTH",icon:"💪",col:C.p5,ex:[
+      {n:"Lat Pulldown (heaviest ever)",s:5,r:"5",c:"PR attempt; full ROM; 4 sec descend; note weight"},
+      {n:"Barbell Bent-Over Row (5RM)",s:5,r:"5",c:"Heaviest row; explosive; rigid spine; elbows to ceiling"},
+      {n:"Weighted Inverted Row",s:4,r:"8",c:"Plate on chest; body rigid; pull chest to bar; hold 2 sec"},
+      {n:"Reverse Pec Fly (heavy drop)",s:4,r:"10+drop",c:"Max weight; then drop 30%; max again — rear delt peak"},
+    ]},
+    {nm:"WOD — BENCHMARK 21-15-9",icon:"🏆",col:C.wod,wod:true,ex:[
+      {n:"Pull-ups (or BAS inverted row)",s:1,r:"21-15-9",c:"BENCHMARK — strict or kipping; note which and total time"},
+      {n:"Barbell / DB Thrusters",s:1,r:"21-15-9",c:"Same weight for all sets; squat to press; note weight"},
+      {n:"Note total time",s:1,r:"COMPARE to Wk 9",c:"This should be faster than Phase 3 — see progress"},
+    ]},
+    {nm:"BICEP PEAK",icon:"💥",col:C.core,ex:[
+      {n:"DB Curl (heaviest ever)",s:4,r:"8",c:"No swing; strict; note weight — this is your curl PR week"},
+      {n:"Concentration Curl",s:3,r:"12/side",c:"Elbow on knee; peak squeeze 2 sec; mind-muscle focus"},
+    ]},
+  ],
+  cool:["Lat stretch door: 30 s × 2","Bicep + chest stretch: 30 s × 2/side","Pigeon pose deep: 60 s × 2/side","Neck full series: 20 s each plane"],
+},
+p5C:{title:"CROSSFIT GAMES STYLE DAY",sub:"Multi-modal madness — the complete athlete",wod:"COMPLEX WOD",tag:"🎮 GAMES",
+  warmup:"5 min run · full dynamic sequence · 10 broad jumps · hang complex",
+  style:"Games day is full chaos — strength, gymnastics, cardio, all in one. Embrace the suck.",
+  blocks:[
+    {nm:"LOWER PEAK",icon:"💪",col:C.p5,ex:[
+      {n:"Barbell RDL (PR attempt)",s:5,r:"5",c:"Heaviest RDL ever — hip hinge mastery; note weight"},
+      {n:"Leg Press (heaviest + pause)",s:4,r:"6",c:"3 sec pause; explosive drive; heaviest load in program"},
+      {n:"Pistol Squat (unassisted)",s:3,r:"5/side",c:"Track progress — note if fully unassisted this week"},
+      {n:"Nordic Hamstring Curl (bench)",s:3,r:"5",c:"Feet under bench; lower body forward slowly; 5 sec down"},
+    ]},
+    {nm:"WOD 1 — 'GRACE' (30 clean & jerk)",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Clean & Jerk (barbell/DB)",s:1,r:"30 for time",c:"Pick a weight you can cycle; note time; BENCHMARK"},
+    ]},
+    {nm:"WOD 2 — GYMNASTICS CHIPPER",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"HSPU (or negatives)",s:1,r:"10",c:"Quality reps; if no HSPU do 10 pike push-ups elevated"},
+      {n:"Pistol Squat (total)",s:1,r:"10/side",c:"Use wall if needed; full depth; track if unassisted"},
+      {n:"L-sit Hold",s:1,r:"30 s total",c:"Break into chunks; build total time; bench or floor"},
+      {n:"Toes-to-Bar",s:1,r:"20",c:"Break as needed; quality kip or strict; toes to bar"},
+      {n:"Dragon Flag",s:1,r:"8",c:"On bench; straight body; slow lower; this closes the chipper"},
+    ]},
+    {nm:"CONDITIONING",icon:"🎯",col:C.core,ex:[
+      {n:"Treadmill Sprint (400 m all out)",s:1,r:"Max effort",c:"This is the final conditioning piece — note time"},
+    ]},
+  ],
+  cool:["Full hip sequence: 5 min","Neck complete: all planes 2 min","Child's pose: 60 s","Savasana: 2 min — peak week deserves this"],
+},
+
+/* ════════════════════════════════════════════════════════════════
+   PHASE 6 — ELITE (Wk 21–24)
+   Theme: Performance testing. Benchmark retests.
+          Hero WOD. PR week. Legacy session.
+════════════════════════════════════════════════════════════════ */
+p6A:{title:"PEAK POWER + BODYWEIGHT MASTERY TEST",sub:"PR attempts + skill showcase",wod:"AMRAP 20 (FINAL)",tag:"👑 ELITE",
+  warmup:"5 min progressive run · full shoulder complex · wall walks × 4",
+  style:"This is it — 21 weeks of work comes out today. Attack every PR attempt.",
+  blocks:[
+    {nm:"SKILL MASTERY SHOWCASE",icon:"🤸",col:C.mob,ex:[
+      {n:"HSPU (max set)",s:1,r:"Max reps",c:"Compare to Week 17 — how many now? Record your number"},
+      {n:"Unassisted Pistol Squat",s:1,r:"Max/side",c:"How many can you do now? This is your skill milestone"},
+      {n:"L-sit Hold (max time)",s:1,r:"Max hold",c:"Compare to Week 9 — track your progress number"},
+      {n:"Dragon Flag (max reps)",s:1,r:"Max reps",c:"Full body control — this shows your core evolution"},
+    ]},
+    {nm:"PR ATTEMPTS",icon:"💪",col:C.p6,ex:[
+      {n:"Barbell Bench Press (1RM attempt)",s:1,r:"1 RM",c:"Work up in 5 sets; note absolute PR; compare to Week 1"},
+      {n:"Barbell Overhead Press (1RM attempt)",s:1,r:"1 RM",c:"True strict press PR; glutes tight; full lockout"},
+      {n:"Barbell RDL (1RM attempt)",s:1,r:"1 RM",c:"Hip hinge mastery; heaviest ever; note the number"},
+      {n:"DB Lateral Raise (max weight)",s:3,r:"10",c:"Heaviest you can do clean; shoulder evolution proof"},
+    ]},
+    {nm:"FINAL WOD — AMRAP 20 (RETEST 'CINDY')",icon:"🏆",col:C.wod,wod:true,ex:[
+      {n:"Push-ups",s:1,r:"10/round",c:"RETEST from Week 9; how many more rounds? Note it"},
+      {n:"Air Squats",s:1,r:"15/round",c:"Below parallel; same as Week 9; see the difference"},
+      {n:"Hollow Body Hold",s:1,r:"20 s/round",c:"How much easier does this feel vs Week 9?"},
+      {n:"Compare to Week 9 score",s:1,r:"BENCHMARK",c:"This is your proof of progress — celebrate the gap"},
+    ]},
+    {nm:"LEGACY CORE",icon:"🎯",col:C.core,ex:[
+      {n:"Hollow Rock (max set)",s:1,r:"Max unbroken",c:"See how far you've come — note your number"},
+      {n:"Hanging Toes-to-Bar (max)",s:1,r:"Max reps",c:"Strict if possible; note number vs Week 1"},
+    ]},
+  ],
+  cool:["Full hip sequence: 5 min","Neck complete: all planes","Savasana: 3 min — you've earned every second"],
+},
+p6B:{title:"BENCHMARK RETESTS + STRENGTH PR",sub:"Fran + Helen retests + pull PRs",wod:"DOUBLE BENCHMARK",tag:"📊 RETEST",
+  warmup:"5 min cross trainer · dead hang × 3 · full shoulder warm-up",
+  style:"Retest day — same workouts as Phase 3. The numbers don't lie. See your growth.",
+  blocks:[
+    {nm:"PULL-UP / MUSCLE-UP FINAL TEST",icon:"🤸",col:C.mob,ex:[
+      {n:"Pull-up (max set — strict)",s:1,r:"Max",c:"Best set of the program — compare to Week 5 ability"},
+      {n:"Muscle-up Attempt",s:3,r:"Attempt",c:"Have you got it? This is the day to try. No pressure."},
+      {n:"Inverted Row (weighted — heaviest)",s:3,r:"8",c:"Heaviest weight on chest; track vs Phase 4"},
+    ]},
+    {nm:"PULL STRENGTH PRs",icon:"💪",col:C.p6,ex:[
+      {n:"Lat Pulldown (1RM attempt)",s:1,r:"1 RM",c:"Heaviest pulldown of program; full ROM; track PR"},
+      {n:"Barbell Bent-Over Row (1RM)",s:1,r:"1 RM",c:"Strict form; max load; compare to Phase 5"},
+      {n:"DB Curl (heaviest 8 reps)",s:3,r:"8",c:"What weight can you do strictly now? Proof of bicep growth"},
+    ]},
+    {nm:"WOD RETEST — 'FRAN' (21-15-9)",icon:"🏆",col:C.wod,wod:true,ex:[
+      {n:"Thrusters",s:1,r:"21-15-9",c:"SAME weight as Week 9 — are you faster? Track time"},
+      {n:"Pull-ups or Inverted Rows",s:1,r:"21-15-9",c:"Note progress — pull-up now? Easier inverted row?"},
+      {n:"Note time vs Week 9",s:1,r:"COMPARE",c:"This number tells the whole story of 24 weeks"},
+    ]},
+    {nm:"WOD RETEST — 'HELEN' (3 RFT)",icon:"🏆",col:C.wod,wod:true,ex:[
+      {n:"Treadmill Run",s:1,r:"400 m × 3",c:"SAME pace effort as Week 9 — you should feel the difference"},
+      {n:"DB Swings",s:1,r:"21 × 3",c:"Same weight; note if you can now do American (overhead)"},
+      {n:"Push-ups or Pull-ups",s:1,r:"12 × 3",c:"What are you doing now vs Week 9? Note it"},
+      {n:"Compare time to Week 9",s:1,r:"BENCHMARK",c:"Helen time drop = fitness proof"},
+    ]},
+  ],
+  cool:["Full body stretch: 10 min","Journal your PRs and reflect","Neck + hip sequence: complete","Savasana: 2 min"],
+},
+p6C:{title:"FINAL HERO WOD — THE MITESH",sub:"You name it. You own it. This is your legacy.",wod:"'MITESH' FINAL",tag:"🏅 LEGACY",
+  warmup:"10 min full body dynamic — your choice. You know your body now.",
+  style:"This is session 72 of 72. You started here. You finish here. Leave everything.",
+  blocks:[
+    {nm:"FINAL STRENGTH BLOCK",icon:"💪",col:C.p6,ex:[
+      {n:"Hang Power Clean + Push Jerk",s:5,r:"3+3",c:"Combined OLY complex — your most technical movement"},
+      {n:"Barbell Bench Press",s:3,r:"8 (80%)",c:"Not a PR today; just feel the strength you've built"},
+      {n:"Barbell RDL",s:3,r:"8 (80%)",c:"Perfect hinge; feel how natural this is now vs Week 1"},
+    ]},
+    {nm:"HERO WOD — 'THE MITESH' (6 RFT)",icon:"🔥",col:C.wod,wod:true,ex:[
+      {n:"Hang Power Clean",s:1,r:"5/round",c:"Every rep strong; this is your signature movement now"},
+      {n:"HSPU (or max pike push-ups)",s:1,r:"5/round",c:"Your overhead strength evolution on display"},
+      {n:"Pistol Squat (total)",s:1,r:"6/round (3/side)",c:"Unassisted if you've got it — milestone moment"},
+      {n:"Toes-to-Bar",s:1,r:"10/round",c:"Controlled; kip or strict; you own this now"},
+      {n:"Treadmill Sprint",s:1,r:"200 m/round",c:"Every round; maintain pace; don't give in"},
+      {n:"Burpees",s:1,r:"5/round",c:"Finish each round with these — close strong, always"},
+      {n:"Note total time",s:1,r:"LEGACY TIME",c:"Write this number somewhere. This is your benchmark forever."},
+    ]},
+    {nm:"FINAL BODYWEIGHT SHOWCASE",icon:"🤸",col:C.mob,ex:[
+      {n:"Dragon Flag",s:2,r:"Max",c:"Full body control — compare to your first ever attempt"},
+      {n:"L-sit Hold",s:2,r:"Max time",c:"Track your final time — note how far you've come"},
+    ]},
+    {nm:"FINAL CORE",icon:"🎯",col:C.core,ex:[
+      {n:"Hollow Rock (max unbroken)",s:1,r:"Max",c:"Final core test — the hollow is your foundation"},
+      {n:"DB Lateral Raise (light — 30 reps)",s:1,r:"30",c:"Final shoulder salute — feel the muscle you've built"},
+    ]},
+  ],
+  cool:["Full hip + neck sequence: 8 min","Savasana: 5 min minimum","Reflect on 24 weeks — you did this","🎉 Programme complete — MITESH is ELITE"],
+},
+};
+
+// ── STATE ─────────────────────────────────────────────────────────
+const S={view:'dash',selWeek:1,selSess:null,prog:{},sessNotes:{},
+  expandMob:false,expandCool:false,expandedEx:{},
+  showReset:false,dateVal:'',toast:null,toastTimer:null};
+
+function save(){try{localStorage.setItem('mitesh-24w',JSON.stringify({prog:S.prog,notes:S.sessNotes}));}catch(e){}}
+function load(){try{const d=localStorage.getItem('mitesh-24w');if(d){const p=JSON.parse(d);S.prog=p.prog||{};S.sessNotes=p.notes||{};}}catch(e){}}
+
+function getSess(w,d){return PROG['p'+phaseOf(w)+d];}
+function getProgress(w,d){
+  const sess=getSess(w,d);if(!sess)return 0;
+  const ck=(S.prog[sk(w,d)]||{}).ck||{};
+  let tot=0,hit=0;
+  sess.blocks.forEach((b,bi)=>b.ex.forEach((ex,ei)=>{
+    for(let si=0;si<(ex.s||1);si++){tot++;if(ck[bi+'-'+ei+'-'+si])hit++;}
+  }));
+  return tot?Math.round((hit/tot)*100):0;
+}
+function isChecked(w,d,bi,ei,si){return !!((S.prog[sk(w,d)]||{}).ck||{})[bi+'-'+ei+'-'+si];}
+function getLog(w,d,bi,ei){return(((S.prog[sk(w,d)]||{}).log||{})[bi+'-'+ei])||{};}
+function getSetLog(w,d,bi,ei,si){return(getLog(w,d,bi,ei).sets||[])[si]||{};}
+function currentWeek(){return Array.from({length:24},(_,i)=>i+1).find(w=>!['A','B','C'].every(d=>(S.prog[sk(w,d)]||{}).done))||24;}
+function doneSessions(){return Object.values(S.prog).filter(p=>p&&p.done).length;}
+function exLogType(blk,ex){
+  if(blk.wod)return'wod';
+  const n=ex.n.toLowerCase(),r=(ex.r||'').toLowerCase();
+  if(n.includes('treadmill')||n.includes('cross trainer')||n.includes('sprint')||n.includes('run'))return'cardio';
+  if(n.includes("farmer")||n.includes('carry'))return'carry';
+  if(r.includes(' s')||r.includes('sec')||n.includes('hold')||n.includes('l-sit')||n.includes('plank')||n.includes('hollow'))return'timed';
+  if(n.includes('push-up')||n.includes('burpee')||n.includes('mountain climb')||n.includes('v-up')||n.includes('dead bug')||n.includes('squat')||n.includes('lunge')||n.includes('jump')||n.includes('crawl')||n.includes('walk')||n.includes('flow')||n.includes('pistol')||n.includes('broad')||n.includes('bound')||n.includes('inchworm')||n.includes('scorpion')||n.includes('ape'))return'bw';
+  return'lift';
+}
+function logSummary(le,lt){
+  if(!le)return'';
+  if(lt==='lift'||lt==='bw'){const p=(le.sets||[]).filter(s=>s&&(s.w||s.r)).map(s=>s.w&&s.r?s.w+'kg×'+s.r:s.r?s.r+'r':s.w+'kg').filter(Boolean);return p.length?'📊 '+p.join(' · '):'';}
+  if(lt==='timed'){const p=(le.sets||[]).filter(s=>s&&s.t).map(s=>s.t+'s');return p.length?'📊 '+p.join(' · '):'';}
+  if(lt==='cardio'){const p=[];if(le.dist)p.push(le.dist+'m');if(le.time)p.push(le.time);return p.length?'📊 '+p.join(' @ '):'';};
+  if(lt==='carry'){const p=(le.sets||[]).filter(s=>s&&(s.w||s.dist)).map(s=>{const a=[];if(s.w)a.push(s.w+'kg');if(s.dist)a.push(s.dist+'m');return a.join('/')}).filter(Boolean);return p.length?'📊 '+p.join(' · '):'';}
+  if(lt==='wod'){const p=[];if(le.rounds)p.push(le.rounds+' rds');if(le.time)p.push(le.time);if(le.weight)p.push('@'+le.weight+'kg');return p.length?'📊 '+p.join(' · '):'';};
+  return'';
+}
+
+function ring(pct,col,sz=52,sw=5){
+  const r=(sz-sw*2)/2,cx=sz/2,cy=sz/2,circ=2*Math.PI*r,dash=(pct/100)*circ;
+  return`<svg width="${sz}" height="${sz}" style="flex-shrink:0">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2E2E44" stroke-width="${sw}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}"
+      stroke-dasharray="${dash} ${circ}" stroke-linecap="round" transform="rotate(-90 ${cx} ${cy})"/>
+    <text x="${cx}" y="${cy+4}" text-anchor="middle" fill="${pct===100?col:'#EEEEF5'}"
+      font-size="${pct===100?11:12}" font-weight="700" font-family="-apple-system,sans-serif">
+      ${pct===100?'✓':pct+'%'}</text></svg>`;
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────
+window.toggle=function(w,d,bi,ei,si){
+  const k=sk(w,d),ck=bi+'-'+ei+'-'+si;
+  if(!S.prog[k])S.prog[k]={};if(!S.prog[k].ck)S.prog[k].ck={};
+  S.prog[k].ck[ck]=!S.prog[k].ck[ck];save();render();
+};
+window.updateLog=function(w,d,bi,ei,field,val,si){
+  const k=sk(w,d),ek=bi+'-'+ei;
+  if(!S.prog[k])S.prog[k]={};if(!S.prog[k].log)S.prog[k].log={};if(!S.prog[k].log[ek])S.prog[k].log[ek]={};
+  const e=S.prog[k].log[ek];
+  if(si!==undefined&&si!==null){if(!e.sets)e.sets=[];if(!e.sets[si])e.sets[si]={};e.sets[si][field]=val;}
+  else e[field]=val;
+  save();renderSession();
+};
+window.markDone=function(w,d){
+  const k=sk(w,d);if(!S.prog[k])S.prog[k]={};
+  S.prog[k].done=true;S.prog[k].date=S.dateVal||today();
+  save();showToast('✅ Session logged!');render();
+};
+window.unmark=function(w,d){const k=sk(w,d);if(S.prog[k])S.prog[k].done=false;save();render();};
+window.confirmReset=function(){S.showReset=true;render();};
+window.cancelReset=function(){S.showReset=false;render();};
+window.resetSession=function(w,d){
+  S.prog[sk(w,d)]={};S.sessNotes[sk(w,d)]='';
+  S.showReset=false;S.expandedEx={};save();showToast('🔄 Session reset');render();
+};
+window.updateDate=function(v){S.dateVal=v;};
+window.updateSessNote=function(k,v){S.sessNotes[k]=v;save();};
+window.setView=function(v){S.view=v;S.showReset=false;render();};
+window.setWeek=function(w){S.selWeek=parseInt(w);render();};
+window.openSess=function(w,d){S.selSess={week:parseInt(w),day:d};S.expandedEx={};S.expandMob=false;S.expandCool=false;S.dateVal='';S.showReset=false;S.view='session';render();};
+window.toggleEx=function(key){S.expandedEx[key]=!S.expandedEx[key];renderSession();};
+window.toggleMob=function(){S.expandMob=!S.expandMob;renderSession();};
+window.toggleCool=function(){S.expandCool=!S.expandCool;renderSession();};
+window.setPhaseWeek=function(p){S.selWeek=[1,5,9,13,17,21][p-1];render();};
+
+function showToast(msg){S.toast=msg;render();if(S.toastTimer)clearTimeout(S.toastTimer);S.toastTimer=setTimeout(()=>{S.toast=null;render();},2500);}
+
+function navHTML(){
+  return`<div class="nav">
+    <button class="nav-btn" onclick="setView('dash')">
+      <span style="font-size:20px">🏠</span>
+      <span style="font-size:9px;color:${S.view==='dash'?C.p1:C.muted};font-weight:${S.view==='dash'?700:400}">Home</span>
+    </button>
+    <button class="nav-btn" onclick="setView('prog')">
+      <span style="font-size:20px">📋</span>
+      <span style="font-size:9px;color:${S.view==='prog'?C.p1:C.muted};font-weight:${S.view==='prog'?700:400}">Program</span>
+    </button>
+  </div>`;
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────
+function renderDash(){
+  const cw=currentWeek(),done=doneSessions(),ph=phaseOf(cw),col=PC[ph].c;
+  const wkDone=['A','B','C'].filter(d=>(S.prog[sk(cw,d)]||{}).done).length;
+  const sessCards=['A','B','C'].map(d=>{
+    const sess=getSess(cw,d),pct=getProgress(cw,d),isDone=!!(S.prog[sk(cw,d)]||{}).done;
+    return`<button class="sess-card" onclick="openSess(${cw},'${d}')"
+      style="border-color:${isDone?col:pct>0?col+'55':C.faint};background:${isDone?col+'11':C.card}">
+      <div style="width:42px;height:42px;border-radius:10px;background:${isDone?col:col+'22'};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">${isDone?'✅':DE[d]}</div>
+      <div style="flex:1">
+        <div style="font-size:11px;font-weight:700;color:${isDone?col:C.text}">Day ${d} — ${sess?sess.title:''}</div>
+        <div style="font-size:10px;color:${C.muted};margin-top:2px">${sess?sess.sub:''}</div>
+        ${sess?`<span class="chip" style="background:${col}22;color:${col};margin-top:4px;display:inline-block">${sess.tag||''}</span>`:''}
+        ${isDone?`<div style="font-size:9px;color:${col};margin-top:2px">✓ ${(S.prog[sk(cw,d)]||{}).date||''}</div>`:''}
+      </div>${ring(isDone?100:pct,col,46)}</button>`;
+  }).join('');
+
+  const phaseGrid=[1,2,3,4,5,6].map(p=>{
+    const wksInPhase=4,startW=(p-1)*4+1,endW=startW+3;
+    const pDone=Array.from({length:wksInPhase},(_,i)=>startW+i).reduce((acc,w)=>acc+['A','B','C'].filter(d=>(S.prog[sk(w,d)]||{}).done).length,0);
+    const total=wksInPhase*3,pPct=total?Math.round((pDone/total)*100):0;
+    const isCur=ph===p;
+    return`<button onclick="setWeek(${startW});setView('prog')"
+      style="background:${isCur?PC[p].c+'22':pDone===total?PC[p].c+'18':C.card};border:1.5px solid ${isCur?PC[p].c:pDone===total?PC[p].c+'88':C.faint};border-radius:10px;padding:9px 6px;text-align:center;cursor:pointer">
+      <div style="font-size:9px;color:${PC[p].c};font-weight:700;margin-bottom:2px">PH ${p}</div>
+      <div style="font-size:9px;color:${C.muted};margin-bottom:5px">${PC[p].name}</div>
+      <div style="height:3px;background:${C.faint};border-radius:2px;overflow:hidden;margin-bottom:4px">
+        <div style="height:100%;width:${pPct}%;background:${PC[p].c};border-radius:2px"></div>
+      </div>
+      <div style="font-size:9px;color:${pDone===total?PC[p].c:C.muted}">${pDone}/${total}</div>
+    </button>`;
+  }).join('');
+
+  return`<div style="display:flex;flex-direction:column;height:100%">
+    <div style="background:linear-gradient(135deg,${PC[ph].bg||'#1A0D06'},#0A0A14);padding:20px 16px 16px;border-bottom:1px solid ${C.faint};flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:13px;margin-bottom:14px">
+        <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,${C.p1},#FF3D3D);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;flex-shrink:0">M</div>
+        <div>
+          <div style="font-size:22px;font-weight:900;letter-spacing:1px">MITESH</div>
+          <div style="font-size:10px;color:${C.muted};margin-top:1px">24-Week Elite · 3×/week · 1 hr · Early morning</div>
+          <div style="display:flex;gap:5px;margin-top:5px;flex-wrap:wrap">
+            ${['Shoulder Dev','Hip Mobility','BW Skills','Neck Relief','OLY Lifting'].map(t=>`<span class="chip" style="background:${C.faint};color:${C.muted}">${t}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        ${[{v:done,l:'Done',col:C.ok},{v:72-done,l:'Left',col:C.muted},{v:'Wk '+cw,l:'Current',col:C.p1},{v:'Ph '+ph,l:PC[ph].name,col:col}].map(s=>`
+        <div class="stat-card"><div style="font-size:17px;font-weight:900;color:${s.col}">${s.v}</div><div style="font-size:9px;color:${C.muted};margin-top:1px">${s.l}</div></div>`).join('')}
+      </div>
+    </div>
+    <div class="scroll" style="padding:16px">
+      <div style="font-size:10px;font-weight:800;color:${C.muted};letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:8px">
+        THIS WEEK — WK ${cw}
+        <span class="chip" style="background:${col}22;color:${col}">${PC[ph].name}</span>
+        <span class="chip" style="background:${C.faint};color:${C.muted}">${PC[ph].wks}</span>
+      </div>
+      <div class="prog-bar-wrap" style="margin-bottom:10px"><div class="prog-bar-fill" style="width:${(wkDone/3)*100}%;background:${col}"></div></div>
+      ${sessCards}
+      <div style="margin-top:20px">
+        <div style="font-size:10px;font-weight:800;color:${C.muted};letter-spacing:1px;margin-bottom:10px">6-PHASE OVERVIEW</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${phaseGrid}</div>
+      </div>
+    </div>
+    ${navHTML()}
+    ${S.toast?`<div class="toast">${S.toast}</div>`:''}
+  </div>`;
+}
+
+// ── PROGRAM VIEW ──────────────────────────────────────────────────
+function renderProg(){
+  const col=PC[phaseOf(S.selWeek)].c;
+  const phaseTabs=[1,2,3,4,5,6].map(p=>`
+    <button onclick="setPhaseWeek(${p})" style="flex:1;padding:6px 2px;border-radius:16px;border:none;background:${phaseOf(S.selWeek)===p?PC[p].c:C.faint};color:${phaseOf(S.selWeek)===p?'#fff':C.muted};font-size:9px;font-weight:700;cursor:pointer">
+      Ph${p}<br><span style="font-size:8px;opacity:.8">${PC[p].name}</span>
+    </button>`).join('');
+  const weekPills=Array.from({length:24},(_,i)=>i+1).map(w=>{
+    const wc=PC[phaseOf(w)].c,dn=['A','B','C'].filter(d=>(S.prog[sk(w,d)]||{}).done).length;
+    return`<button onclick="setWeek(${w})" style="border-radius:20px;padding:4px 9px;border:none;background:${S.selWeek===w?wc:dn===3?wc+'33':C.faint};color:${S.selWeek===w?'#fff':dn===3?wc:C.muted};flex-shrink:0;font-weight:700;font-size:11px;min-width:30px;cursor:pointer">${w}</button>`;
+  }).join('');
+  const dayCards=['A','B','C'].map(d=>{
+    const sess=getSess(S.selWeek,d),pct=getProgress(S.selWeek,d),isDone=!!(S.prog[sk(S.selWeek,d)]||{}).done;
+    return`<button onclick="openSess(${S.selWeek},'${d}')"
+      style="background:${isDone?col+'11':C.card};border:1.5px solid ${isDone?col:pct>0?col+'66':C.faint};border-radius:12px;padding:13px;cursor:pointer;display:flex;flex-direction:column;width:100%;margin-bottom:12px;text-align:left">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:46px;height:46px;border-radius:11px;background:${isDone?col:col+'22'};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${isDone?'✅':DE[d]}</div>
+        <div style="flex:1">
+          <div style="font-size:11px;font-weight:800;color:${isDone?col:C.text}">Day ${d} — ${sess?sess.title:''}</div>
+          <div style="font-size:10px;color:${C.muted};margin-top:2px">${sess?sess.sub:''}</div>
+          <div style="display:flex;gap:6px;margin-top:5px;flex-wrap:wrap">
+            <span class="chip" style="background:${C.wod}22;color:${C.wod}">${sess?sess.wod:''}</span>
+            ${sess?`<span class="chip" style="background:${col}22;color:${col}">${sess.tag||''}</span>`:''}
+            ${isDone?`<span class="chip" style="background:${col}22;color:${col}">✓ ${(S.prog[sk(S.selWeek,d)]||{}).date||''}</span>`:''}
+          </div>
+        </div>${ring(isDone?100:pct,col,50)}
+      </div>
+      ${pct>0&&!isDone?`<div style="margin-top:9px;width:100%"><div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${pct}%;background:${col}"></div></div><div style="font-size:9px;color:${C.muted};margin-top:3px">${pct}% checked</div></div>`:''}
+    </button>`;
+  }).join('');
+  return`<div style="display:flex;flex-direction:column;height:100%">
+    <div style="padding:13px 16px 0;background:${C.surf};border-bottom:1px solid ${C.faint};flex-shrink:0">
+      <div style="font-size:12px;font-weight:800;letter-spacing:1px;margin-bottom:10px">24-WEEK ELITE PROGRAM</div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:11px">${phaseTabs}</div>
+      <div style="display:flex;gap:5px;overflow-x:auto;padding-bottom:12px">${weekPills}</div>
+    </div>
+    <div class="scroll" style="padding:14px 16px">
+      <div class="phase-banner" style="background:${PC[phaseOf(S.selWeek)].c}18;border-left-color:${PC[phaseOf(S.selWeek)].c}">
+        <div style="font-size:10px;font-weight:800;color:${PC[phaseOf(S.selWeek)].c};letter-spacing:.5px">PHASE ${phaseOf(S.selWeek)} — ${PC[phaseOf(S.selWeek)].name} · ${PC[phaseOf(S.selWeek)].wks}</div>
+        <div style="font-size:10px;color:${C.muted};margin-top:3px">${PC[phaseOf(S.selWeek)].sub}</div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:${col};margin-bottom:10px;letter-spacing:.5px">WEEK ${S.selWeek}</div>
+      ${dayCards}
+    </div>
+    ${navHTML()}
+    ${S.toast?`<div class="toast">${S.toast}</div>`:''}
+  </div>`;
+}
+
+// ── LOG PANEL ─────────────────────────────────────────────────────
+function logPanelHTML(w,d,bi,ei,ex,blk){
+  const lt=exLogType(blk,ex),col=blk.col,le=getLog(w,d,bi,ei);
+  const lbl=t=>`<div style="font-size:9px;color:${C.muted};margin-bottom:3px">${t}</div>`;
+  if(lt==='wod')return`<div class="log-panel" style="background:${C.raise}">
+    <div style="font-size:9px;color:${C.muted};font-weight:700;letter-spacing:.5px;margin-bottom:7px">WOD LOG</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:7px">
+      <div>${lbl('Rounds')}<input class="inp" style="width:60px" placeholder="e.g. 6" value="${le.rounds||''}" oninput="updateLog(${w},'${d}',${bi},${ei},'rounds',this.value)"/></div>
+      <div>${lbl('Time (mm:ss)')}<input class="inp" style="width:70px" placeholder="12:34" value="${le.time||''}" oninput="updateLog(${w},'${d}',${bi},${ei},'time',this.value)"/></div>
+      <div>${lbl('Weight (kg)')}<input class="inp" style="width:60px" placeholder="kg" value="${le.weight||''}" oninput="updateLog(${w},'${d}',${bi},${ei},'weight',this.value)"/></div>
+    </div>
+    <input class="inp" style="width:100%;text-align:left" placeholder="Notes / PRs / how it felt..." value="${(le.notes||'').replace(/"/g,'&quot;')}" oninput="updateLog(${w},'${d}',${bi},${ei},'notes',this.value)"/>
+  </div>`;
+  if(lt==='cardio')return`<div class="log-panel" style="background:${C.raise}">
+    <div style="font-size:9px;color:${C.muted};font-weight:700;letter-spacing:.5px;margin-bottom:7px">CARDIO LOG</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:7px">
+      <div>${lbl('Distance (m)')}<input class="inp" style="width:70px" placeholder="400" value="${le.dist||''}" oninput="updateLog(${w},'${d}',${bi},${ei},'dist',this.value)"/></div>
+      <div>${lbl('Time (mm:ss)')}<input class="inp" style="width:70px" placeholder="2:15" value="${le.time||''}" oninput="updateLog(${w},'${d}',${bi},${ei},'time',this.value)"/></div>
+      <div>${lbl('Speed/Level')}<input class="inp" style="width:70px" placeholder="8km/h" value="${le.speed||''}" oninput="updateLog(${w},'${d}',${bi},${ei},'speed',this.value)"/></div>
+    </div>
+    <input class="inp" style="width:100%;text-align:left" placeholder="Notes..." value="${(le.notes||'').replace(/"/g,'&quot;')}" oninput="updateLog(${w},'${d}',${bi},${ei},'notes',this.value)"/>
+  </div>`;
+  if(lt==='timed')return`<div class="log-panel" style="background:${C.raise}">
+    <div style="font-size:9px;color:${C.muted};font-weight:700;letter-spacing:.5px;margin-bottom:7px">LOG HOLD / TIME</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:7px">
+      ${Array.from({length:ex.s||1},(_,si)=>{
+        const sl=getSetLog(w,d,bi,ei,si),done=isChecked(w,d,bi,ei,si);
+        return`<div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div style="font-size:9px;color:${C.muted}">Set ${si+1}</div>
+          <div style="display:flex;gap:4px;align-items:center">
+            <input class="inp" style="width:48px" placeholder="s" value="${sl.t||''}" oninput="updateLog(${w},'${d}',${bi},${ei},'t',this.value,${si})"/>
+            <span style="font-size:9px;color:${C.muted}">s</span>
+            <button class="bubble" onclick="toggle(${w},'${d}',${bi},${ei},${si})" style="width:22px;height:22px;background:${done?col:C.faint}">${done?'✓':''}</button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    <input class="inp" style="width:100%;text-align:left" placeholder="Notes..." value="${(le.notes||'').replace(/"/g,'&quot;')}" oninput="updateLog(${w},'${d}',${bi},${ei},'notes',this.value)"/>
+  </div>`;
+  if(lt==='carry')return`<div class="log-panel" style="background:${C.raise}">
+    <div style="font-size:9px;color:${C.muted};font-weight:700;letter-spacing:.5px;margin-bottom:7px">LOG CARRY SETS</div>
+    ${Array.from({length:ex.s||1},(_,si)=>{
+      const sl=getSetLog(w,d,bi,ei,si),done=isChecked(w,d,bi,ei,si);
+      return`<div class="log-row">
+        <span style="font-size:10px;color:${C.muted};width:36px;flex-shrink:0">S${si+1}</span>
+        <input class="inp" style="width:52px" placeholder="kg" value="${sl.w||''}" oninput="updateLog(${w},'${d}',${bi},${ei},'w',this.value,${si})"/><span style="font-size:9px;color:${C.muted}">kg</span>
+        <input class="inp" style="width:46px" placeholder="m" value="${sl.dist||''}" oninput="updateLog(${w},'${d}',${bi},${ei},'dist',this.value,${si})"/><span style="font-size:9px;color:${C.muted}">m</span>
+        <button class="bubble" onclick="toggle(${w},'${d}',${bi},${ei},${si})" style="width:24px;height:24px;background:${done?col:C.faint}">${done?'✓':si+1}</button>
+      </div>`;
+    }).join('')}
+    <input class="inp" style="width:100%;text-align:left;margin-top:4px" placeholder="Notes..." value="${(le.notes||'').replace(/"/g,'&quot;')}" oninput="updateLog(${w},'${d}',${bi},${ei},'notes',this.value)"/>
+  </div>`;
+  // bw or lift
+  const isBW=lt==='bw';
+  return`<div class="log-panel" style="background:${C.raise}">
+    <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+      <div style="font-size:9px;color:${C.muted};font-weight:700;letter-spacing:.5px">LOG SETS — Target: ${ex.r}</div>
+      ${isBW?`<div style="font-size:9px;color:${C.muted}">bodyweight</div>`:''}
+    </div>
+    <div class="set-grid" style="margin-bottom:5px">
+      <div></div>
+      <div style="font-size:9px;color:${C.muted};text-align:center">${isBW?'BW/Notes':'kg'}</div>
+      <div style="font-size:9px;color:${C.muted};text-align:center">Reps done</div>
+      <div style="font-size:9px;color:${C.muted};text-align:center">✓</div>
+    </div>
+    ${Array.from({length:ex.s||1},(_,si)=>{
+      const sl=getSetLog(w,d,bi,ei,si),done=isChecked(w,d,bi,ei,si);
+      return`<div class="set-grid">
+        <div style="font-size:10px;color:${done?col:C.muted};font-weight:700">S${si+1}</div>
+        <input class="inp" style="border-color:${sl.w?col+'66':C.faint}" placeholder="${isBW?'BW':'kg'}" value="${sl.w||''}" oninput="updateLog(${w},'${d}',${bi},${ei},'w',this.value,${si})"/>
+        <input class="inp" style="border-color:${sl.r?col+'66':C.faint}" placeholder="${ex.r}" value="${sl.r||''}" oninput="updateLog(${w},'${d}',${bi},${ei},'r',this.value,${si})"/>
+        <button class="bubble" onclick="toggle(${w},'${d}',${bi},${ei},${si})" style="width:26px;height:26px;background:${done?col:C.faint};border:2px solid ${done?col:C.faint}">${done?'✓':''}</button>
+      </div>`;
+    }).join('')}
+    <input class="inp" style="width:100%;text-align:left;margin-top:5px" placeholder="Notes / RPE / feeling..." value="${(le.notes||'').replace(/"/g,'&quot;')}" oninput="updateLog(${w},'${d}',${bi},${ei},'notes',this.value)"/>
+  </div>`;
+}
+
+// ── SESSION VIEW ──────────────────────────────────────────────────
+function renderSession(){
+  if(!S.selSess)return;
+  const {week:w,day:d}=S.selSess;
+  const sess=getSess(w,d);if(!sess)return;
+  const col=PC[phaseOf(w)].c,pct=getProgress(w,d),isDone=!!(S.prog[sk(w,d)]||{}).done,sdKey=sk(w,d);
+
+  const blocksHTML=sess.blocks.map((blk,bi)=>{
+    const exHTML=blk.ex.map((ex,ei)=>{
+      const exKey=bi+'-'+ei,isOpen=!!S.expandedEx[exKey],lt=exLogType(blk,ex);
+      const le=getLog(w,d,bi,ei),sm=logSummary(le,lt);
+      const allDone=!blk.wod&&Array.from({length:ex.s||1},(_,si)=>isChecked(w,d,bi,ei,si)).every(Boolean);
+      return`<div style="border-bottom:${ei<blk.ex.length-1?'1px solid '+C.faint:'none'}">
+        <div class="ex-row" onclick="toggleEx('${exKey}')" style="background:${allDone?blk.col+'0A':'transparent'}">
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="font-size:11px;font-weight:700;color:${blk.wod?'#FFB3B3':allDone?blk.col:C.text}">${ex.n}</div>
+              ${allDone?'<span>✅</span>':''}
+            </div>
+            <div style="font-size:10px;font-weight:600;color:${blk.col};margin-top:1px">${!blk.wod?(ex.s||1)+' × '+ex.r:ex.r}</div>
+            ${sm?'<div style="font-size:9px;color:'+C.ok+';margin-top:2px;font-weight:600">'+sm+'</div>':''}
+            <div style="font-size:9px;color:${C.muted};margin-top:2px;line-height:1.4">${ex.c}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+            <span style="font-size:10px;color:${isOpen?blk.col:C.muted}">${isOpen?'▲ close':'📝 log'}</span>
+            ${blk.wod?`<button onclick="event.stopPropagation();toggle(${w},'${d}',${bi},${ei},0)" style="width:30px;height:30px;border-radius:8px;background:${isChecked(w,d,bi,ei,0)?C.wod:C.faint};border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">${isChecked(w,d,bi,ei,0)?'✅':'☐'}</button>`:''}
+          </div>
+        </div>
+        ${isOpen?logPanelHTML(w,d,bi,ei,ex,blk):''}
+      </div>`;
+    }).join('');
+    return`<div style="margin-bottom:14px">
+      <div class="block-hdr" style="background:${blk.col}18;border:1px solid ${blk.col}44;border-bottom:none">
+        <span style="font-size:14px">${blk.icon}</span>
+        <div>
+          <div style="font-size:11px;font-weight:800;color:${blk.col};letter-spacing:.5px">${blk.nm}</div>
+          <div style="font-size:9px;color:${C.muted}">${blk.wod?'Log rounds · time · weight':'Tap to log each set'}</div>
+        </div>
+      </div>
+      <div class="block-body" style="background:${blk.wod?C.wod+'09':C.card};border:1px solid ${blk.col}33">${exHTML}</div>
+    </div>`;
+  }).join('');
+
+  const mobHTML=MOB.map((ex,ei)=>`
+    <div style="padding:9px 13px;border-bottom:${ei<MOB.length-1?`1px solid ${C.faint}`:'none'};display:flex;gap:10px;align-items:center">
+      <button class="bubble" onclick="toggle(${w},'${d}',-1,${ei},0)" style="width:24px;height:24px;background:${isChecked(w,d,-1,ei,0)?C.mob:C.faint}">${isChecked(w,d,-1,ei,0)?'✓':''}</button>
+      <div style="flex:1"><div style="font-size:10px;font-weight:700">${ex.n}</div><div style="font-size:9px;color:${C.muted}">${ex.r} · ${ex.c}</div></div>
+    </div>`).join('');
+
+  const html=`<div style="display:flex;flex-direction:column;height:100%">
+    <div style="background:${C.surf};border-bottom:1px solid ${C.faint};padding:11px 15px;flex-shrink:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <button onclick="setView('prog')" style="background:none;border:none;color:${C.muted};font-size:12px;cursor:pointer">← Back</button>
+        <button onclick="confirmReset()" style="background:none;border:1px solid ${C.danger}55;border-radius:8px;padding:4px 10px;color:${C.danger};font-size:10px;font-weight:600;cursor:pointer">🔄 Reset</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:11px">
+        <div style="flex:1">
+          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:4px">
+            <span class="chip" style="background:${col}22;color:${col};font-weight:700">WK ${w} · DAY ${d}</span>
+            <span class="chip" style="background:${C.wod}22;color:${C.wod};font-weight:700">${sess.wod}</span>
+            <span class="chip" style="background:${col}22;color:${col};font-weight:700">${sess.tag||''}</span>
+          </div>
+          <div style="font-size:16px;font-weight:900;letter-spacing:.5px">${sess.title}</div>
+          <div style="font-size:10px;color:${C.muted};margin-top:1px">${sess.sub}</div>
+        </div>${ring(isDone?100:pct,col,52)}
+      </div>
+    </div>
+    <div class="scroll" style="padding:12px 15px">
+      <div style="background:${C.card};border-radius:10px;padding:10px 13px;margin-bottom:10px;border-left:3px solid ${C.warn}">
+        <div style="font-size:10px;font-weight:700;color:${C.warn};margin-bottom:3px">⚡ WARM-UP</div>
+        <div style="font-size:10px;color:${C.muted};line-height:1.5">${sess.warmup}</div>
+      </div>
+      <div style="background:${col}11;border-radius:10px;padding:9px 13px;margin-bottom:12px;border-left:3px solid ${col}">
+        <div style="font-size:9px;font-weight:700;color:${col};margin-bottom:2px">💡 COACH NOTE</div>
+        <div style="font-size:10px;color:${C.muted};line-height:1.5;font-style:italic">${sess.style}</div>
+      </div>
+      <button onclick="toggleMob()" style="display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:${S.expandMob?'10px 10px 0 0':'10px'};border:1px solid ${C.mob}44;${S.expandMob?'border-bottom:none;':''}background:${C.mob}18;width:100%;cursor:pointer;margin-bottom:${S.expandMob?0:12}px">
+        <span>🧘</span>
+        <div style="flex:1;text-align:left"><div style="font-size:11px;font-weight:800;color:${C.mob}">MOBILITY — 5 MIN</div><div style="font-size:9px;color:${C.muted}">Hip + Neck · Every session · Non-negotiable</div></div>
+        <span style="color:${C.mob};font-size:13px">${S.expandMob?'▲':'▼'}</span>
+      </button>
+      ${S.expandMob?`<div style="background:${C.card};border-radius:0 0 10px 10px;margin-bottom:12px;border:1px solid ${C.mob}33;border-top:none">${mobHTML}</div>`:''}
+      ${blocksHTML}
+      <div style="background:${C.card};border:1px solid ${C.faint};border-radius:10px;padding:12px 13px;margin-bottom:12px">
+        <div style="font-size:10px;font-weight:700;color:${C.muted};margin-bottom:6px">📝 SESSION NOTES</div>
+        <textarea oninput="updateSessNote('${sdKey}',this.value)" placeholder="How did it feel? PRs? Energy? What to work on..."
+          style="width:100%;background:${C.raise};border:1px solid ${C.faint};border-radius:8px;padding:8px 10px;color:${C.text};font-size:11px;resize:vertical;min-height:68px;line-height:1.5">${S.sessNotes[sdKey]||''}</textarea>
+      </div>
+      <button onclick="toggleCool()" style="display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:${S.expandCool?'10px 10px 0 0':'10px'};border:1px solid ${C.ok}44;${S.expandCool?'border-bottom:none;':''}background:#0D2A1A;width:100%;cursor:pointer;margin-bottom:${S.expandCool?0:12}px">
+        <span>🧊</span>
+        <div style="flex:1;text-align:left"><div style="font-size:11px;font-weight:800;color:${C.ok}">COOL-DOWN STRETCHES</div><div style="font-size:9px;color:${C.muted}">Hip · Neck · Thoracic — 5 min</div></div>
+        <span style="color:${C.ok};font-size:13px">${S.expandCool?'▲':'▼'}</span>
+      </button>
+      ${S.expandCool?`<div style="background:${C.card};border-radius:0 0 10px 10px;margin-bottom:12px;border:1px solid ${C.ok}33;border-top:none;padding:10px 13px">
+        ${sess.cool.map((c,i)=>`<div style="font-size:10px;color:${C.muted};padding:5px 0;border-bottom:${i<sess.cool.length-1?`1px solid ${C.faint}`:'none'}">🌿 ${c}</div>`).join('')}
+      </div>`:''}
+      ${!isDone?`
+        <div style="background:linear-gradient(135deg,${col}18,${C.card});border:1px solid ${col}44;border-radius:12px;padding:14px;margin-bottom:8px">
+          <div style="font-size:11px;font-weight:700;color:${col};margin-bottom:10px">✅ MARK SESSION COMPLETE</div>
+          <input type="date" onchange="updateDate(this.value)" value="${S.dateVal}"
+            style="width:100%;background:${C.raise};border:1px solid ${C.faint};border-radius:8px;padding:8px 10px;color:${C.text};font-size:11px;margin-bottom:10px"/>
+          <button onclick="markDone(${w},'${d}')"
+            style="width:100%;padding:13px;background:${col};border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;letter-spacing:.5px">LOG SESSION</button>
+          ${pct<100?`<div style="font-size:9px;color:${C.muted};text-align:center;margin-top:7px">${100-pct}% unchecked — you can still log!</div>`:''}
+        </div>`:`
+        <div style="background:${C.ok}18;border:1px solid ${C.ok}44;border-radius:12px;padding:16px;text-align:center;margin-bottom:8px">
+          <div style="font-size:22px;margin-bottom:5px">✅</div>
+          <div style="font-size:13px;font-weight:800;color:${C.ok}">SESSION COMPLETE</div>
+          <div style="font-size:11px;color:${C.muted};margin-top:3px">${(S.prog[sdKey]||{}).date||''}</div>
+          <button onclick="unmark(${w},'${d}')" style="margin-top:10px;background:none;border:1px solid ${C.faint};border-radius:8px;padding:5px 14px;color:${C.muted};font-size:10px;cursor:pointer">Undo</button>
+        </div>`}
+    </div>
+    ${navHTML()}
+    ${S.showReset?`<div class="modal-bg"><div class="modal" style="border:1px solid ${C.danger}44">
+      <div style="font-size:16px;font-weight:900;color:${C.danger};margin-bottom:8px">Reset Session?</div>
+      <div style="font-size:12px;color:${C.muted};line-height:1.6;margin-bottom:18px">Clears all checks, weights, reps, and notes for <strong style="color:${C.text}">Week ${w} · Day ${d}</strong>. Cannot be undone.</div>
+      <div style="display:flex;gap:10px">
+        <button onclick="cancelReset()" style="flex:1;padding:12px;background:${C.faint};border:none;border-radius:10px;color:${C.text};font-size:12px;font-weight:600;cursor:pointer">Cancel</button>
+        <button onclick="resetSession(${w},'${d}')" style="flex:1;padding:12px;background:${C.danger};border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:800;cursor:pointer">🔄 Reset</button>
+      </div>
+    </div></div>`:''}
+    ${S.toast?`<div class="toast">${S.toast}</div>`:''}
+  </div>`;
+  document.getElementById('app').innerHTML=html;
+}
+
+// ── MAIN RENDER ───────────────────────────────────────────────────
+function render(){
+  if(S.view==='session')renderSession();
+  else document.getElementById('app').innerHTML=S.view==='prog'?renderProg():renderDash();
+}
+
+try{load();}catch(e){console.error('load error',e);}
+try{render();}catch(e){
+  document.getElementById('app').innerHTML='<div style="color:#FF6B35;padding:20px;font-size:12px;line-height:1.8"><b>Runtime Error:</b><br>'+e.message+'<br><br><pre style="font-size:10px;overflow:auto">'+e.stack+'</pre></div>';
+}
+</script>
+</body>
+</html>
